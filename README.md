@@ -1,0 +1,2 @@
+- Automate the process of building, pushing docker container to remote repository.
+- Automate the deployment of an LLM model inside the docker container to a kubeflow pipeline that runs on kubernetes cluster locally.
