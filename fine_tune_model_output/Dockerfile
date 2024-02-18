@@ -9,6 +9,6 @@ RUN pip install tensorflow
 
 RUN pip install torch
 
-COPY fine_tune_model.py /app
+COPY fine_tune_model_output.py /app
 
-ENTRYPOINT ["python3", "fine_tunned_model_output.py"]
+ENTRYPOINT ["python3", "fine_tune_model_output.py"]
