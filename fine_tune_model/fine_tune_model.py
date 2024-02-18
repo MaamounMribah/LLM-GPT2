@@ -1,44 +1,56 @@
-import torch
+
 from transformers import GPT2LMHeadModel, GPT2Tokenizer, Trainer, TrainingArguments
-import pickle
-import sys
+from datasets import load_dataset
 
-def fine_tune_model(preprocessed_data_path):
-    preprocessed_data_path='preprocessed_data.pkl' 
-    with open(preprocessed_data_path, 'rb') as f:
-        tokenized_datasets = pickle.load(f)
-
-    model = GPT2LMHeadModel.from_pretrained('gpt2')
+# Model Fine-Tuning Component
+def fine_tune_model():
     tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-
-    # Assuming tokenized_datasets is a dictionary with a 'train' key
-    train_dataset = tokenized_datasets['train']
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    model = GPT2LMHeadModel.from_pretrained('gpt2')
+    model.resize_token_embeddings(len(tokenizer))
+    # Load dataset and split into train and eval
+    raw_datasets = load_dataset('ag_news', split={'train': 'train[:1%]', 'eval': 'test[:1%]'})
+    #dataset = load_dataset('ag_news', split='train[:1%]')
     
+    def preprocess_function(examples):
+        result = tokenizer(examples['text'], padding='max_length', truncation=True, max_length=128)
+        result["labels"] = result["input_ids"][:]
+        return result
+
+    tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
+    train_dataset = tokenized_datasets['train']
+    eval_dataset = tokenized_datasets['eval']
+
     training_args = TrainingArguments(
-        output_dir='/mnt/data/gpt2_finetuned',
+        output_dir='./gpt2_finetuned',
         num_train_epochs=3,
-        per_device_train_batch_size=4,
+        per_device_train_batch_size=8,  # Reduced batch size
+        gradient_accumulation_steps=4,  # Implement gradient accumulation
+        
         warmup_steps=500,
         weight_decay=0.01,
-        logging_dir='/logs',
+        logging_dir='./logs',
         logging_steps=10,
+        load_best_model_at_end=True,
+        evaluation_strategy="epoch",
+        save_strategy="epoch"
     )
 
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
-    )
+        eval_dataset=eval_dataset,  # Provide the eval_dataset here
+    )  
 
     trainer.train()
 
-    model_path = '/mnt/data/gpt2_finetuned/model'
+    model_path = './gpt2_finetuned'
     model.save_pretrained(model_path)
 
     print(f"Model fine-tuned and saved to {model_path}")
-    return (model_path,)
-
+    
 
 if __name__ == '__main__':
-    preprocessed_data_path='./preprocessed_data.pkl' 
-    fine_tune_model(preprocessed_data_path)
+    
+    fine_tune_model()

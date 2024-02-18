@@ -19,6 +19,7 @@ def preprocess_data(dataset_name='ag_news', task='sst2', split='train[:10%]'):
         pickle.dump(tokenized_datasets, f)
 
     print("Data preprocessing completed.")
+    print("Results saved to preprocessed_data.pkl file.")
     return preprocessed_data_path
 
 if __name__ == "__main__":
