@@ -51,13 +51,22 @@ def evaluate_model_op(model_path:str,test_data:str):
         ],
     )
 
-def generating_output_op(input_data: str):
+def default_model_output_op(input_data: str):
     os.system('docker build -t maamounm/outputcontainer:latest ./generating_output')
     os.system('docker push maamounm/outputcontainer:latest')
     return dsl.ContainerOp(
         name="Generating output Name",
         image="maamounm/outputcontainer:latest",
         arguments=[input_data],
+    )
+
+def fine_tunned_model_output_op(input_data: str):
+    os.system('docker build -t maamounm/fine_tunned_model_outputcontainer:latest ./fine_tunned_model_output')
+    os.system('docker push maamounm/fine_tunned_model_outputcontainer:latest')
+    return dsl.ContainerOp(
+        name="Generating output Name",
+        image="maamounm/fine_tunned_model_outputcontainer:latest",
+        #arguments=[input_data],
     )
 
 """
@@ -122,7 +131,8 @@ def gpt2_pipeline(dataset_name: str,task:str,split:str,preprocessed_data_path:st
     preprocess_task = preprocess_data_op(dataset_name=dataset_name, task=task, split=split)
     fine_tune_task = fine_tune_model_op(preprocessed_data_path=preprocessed_data_path).after(preprocess_task)
     evaluate_task = evaluate_model_op(model_path=model_path, test_data=test_data).after(fine_tune_task)
-    generating_output = generating_output_op(input_data).after(evaluate_task)
+    generating_output_fine_tunned_model_task=fine_tunned_model_output_op().after(fine_tune_task)
+    generating_output = generating_output_op(input_data).after(preprocess_task)
 
 
 # Compile the pipeline

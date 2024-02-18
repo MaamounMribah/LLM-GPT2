@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: gpt-2-fine-tuning-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22, pipelines.kubeflow.org/pipeline_compilation_time: '2024-02-18T16:19:03.905017',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22, pipelines.kubeflow.org/pipeline_compilation_time: '2024-02-18T21:07:21.189033',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline that fine-tunes
       a GPT-2 model.", "inputs": [{"name": "dataset_name", "type": "String"}, {"name":
       "task", "type": "String"}, {"name": "split", "type": "String"}, {"name": "preprocessed_data_path",
