@@ -55,7 +55,7 @@ def generated_output_before_fine_tunning_op(input_data: str):
     os.system('docker build -t maamounm/generated_output_before_fine_tunning ./generated_output_before_fine_tunning')
     os.system('docker push maamounm/generated_output_before_fine_tunning')
     return dsl.ContainerOp(
-        name="Generating output Name",
+        name="Generating output before fine tunning",
         image="maamounm/generated_output_before_fine_tunning:latest",
         #arguments=[input_data],
     )

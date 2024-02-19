@@ -6,7 +6,8 @@ WORKDIR /app
 RUN pip install transformers
 RUN pip install tensorflow
 RUN pip install datasets
+RUN pip install  torch
 
-COPY generated_output before_fine _tunning.py /app
+COPY generated_output_before_fine_tunning.py /app
 
-ENTRYPOINT ["python3", "generated_output before_fine _tunning.py"]
+ENTRYPOINT ["python3", "generated_output_before_fine_tunning.py"]

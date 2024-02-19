@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: gpt-2-fine-tuning-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22, pipelines.kubeflow.org/pipeline_compilation_time: '2024-02-19T10:23:00.011217',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22, pipelines.kubeflow.org/pipeline_compilation_time: '2024-02-19T12:30:35.288563',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline that fine-tunes
       a GPT-2 model.", "inputs": [{"name": "dataset_name", "type": "String"}, {"name":
       "task", "type": "String"}, {"name": "split", "type": "String"}, {"name": "preprocessed_data_path",
@@ -14,7 +14,7 @@ spec:
   templates:
   - name: data-processing
     container:
-      args: [--dataset_name, ag_news, --task, default, --split, 'train[:10%]']
+      args: [--dataset_name, ag_news, --task, default, --split, 'train[:1%]']
       image: maamounm/gpt2_preprocess_data:latest
     metadata:
       labels:
