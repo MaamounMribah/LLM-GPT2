@@ -9,17 +9,20 @@ def fine_tune_model():
     model = GPT2LMHeadModel.from_pretrained('gpt2')
     model.resize_token_embeddings(len(tokenizer))
     # Load dataset and split into train and eval
-    raw_datasets = load_dataset('Unified-Language-Model-Alignment/Anthropic_HH_Golden', split={'train': 'train[:1%]', 'eval': 'test[:1%]'})
-    #dataset = load_dataset('ag_news', split='train[:1%]')
+    #raw_datasets = load_dataset('Unified-Language-Model-Alignment/Anthropic_HH_Golden', split={'train': 'train[:1%]', 'eval': 'test[:1%]'})
+    
     
     def preprocess_function(examples):
         result = tokenizer(examples['text'], padding='max_length', truncation=True, max_length=128)
         result["labels"] = result["input_ids"][:]
         return result
 
+    raw_datasets = load_dataset('ag_news', split={'train_subset': 'train[:1%]', 'test_subset': 'test[:1%]'})
     tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
-    train_dataset = tokenized_datasets['train']
-    eval_dataset = tokenized_datasets['eval']
+    
+    
+    train_dataset = tokenized_datasets['train_subset']
+    eval_dataset = tokenized_datasets['test_subset']
 
     training_args = TrainingArguments(
         output_dir='./gpt2_finetuned',

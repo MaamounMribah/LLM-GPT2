@@ -51,12 +51,12 @@ def evaluate_model_op(model_path:str,test_data:str):
         ],
     )
 
-def generated_output before_fine _tunning(input_data: str):
-    os.system('docker build -t maamounm/generated_output_before_fine_tunning:latest ./generated_output before_fine _tunning')
-    os.system('docker push maamounm/generated_output_before_fine_tunning:latest')
+def generated_output_before_fine_tunning_op(input_data: str):
+    os.system('docker build -t maamounm/generated_output_before_fine_tunning ./generated_output_before_fine_tunning')
+    os.system('docker push maamounm/generated_output_before_fine_tunning')
     return dsl.ContainerOp(
         name="Generating output Name",
-        image="maamounm/maamounm/generated_output_before_fine_tunning:latest",
+        image="maamounm/generated_output_before_fine_tunning:latest",
         #arguments=[input_data],
     )
 
@@ -123,7 +123,7 @@ def evaluate_model_op(model_path:str,test_data:str):
 def gpt2_pipeline(dataset_name: str,task:str,split:str,preprocessed_data_path:str,test_data:str):
     dataset_name='ag_news'
     task='default'
-    split='train[:10%]'
+    split='train[:1%]'
     preprocessed_data_path='preprocessed_data.pkl'
     test_data='preprocessed_data.pkl'
     model_path='model'
@@ -132,7 +132,7 @@ def gpt2_pipeline(dataset_name: str,task:str,split:str,preprocessed_data_path:st
     fine_tune_task = fine_tune_model_op(preprocessed_data_path=preprocessed_data_path).after(preprocess_task)
     evaluate_fine_tuned_mode_task = evaluate_model_op(model_path=model_path, test_data=test_data).after(fine_tune_task)
     generating_output_fine_tune_model_task=fine_tunned_model_output_op().after(fine_tune_task)
-    generated_output before_fine_tunning_task = generated_output before_fine _tunning_op().after(preprocess_task)
+    generated_output_before_fine_tunning_task = generated_output_before_fine_tunning_op(input_data).after(preprocess_task)
 
 
 # Compile the pipeline

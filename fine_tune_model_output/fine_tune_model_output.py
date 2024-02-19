@@ -62,6 +62,8 @@ class MyModel:
 
         return pd.DataFrame(data={"answer": [response], "model_type": ["gpt2"]})
 
+    
+
 # Example usage:
 my_model = MyModel()
 my_model.initialize_model()  # Initialize model and tokenizer
@@ -77,3 +79,4 @@ df_input = pd.DataFrame(data={
 
 response_df = my_model.predict(df_input)
 print(response_df)
+
